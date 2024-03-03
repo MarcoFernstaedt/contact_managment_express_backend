@@ -2,11 +2,11 @@
   "name": "contact_managment_express_backend",
   "version": "1.0.0",
   "description": "express application manages contacts of authorized user",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [
     "contact",
