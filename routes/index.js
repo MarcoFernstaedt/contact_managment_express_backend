@@ -1,11 +1,11 @@
 const router = require("express").Router();
 // Importing routes
-const { getContacts } = require("../controllers/contacts");
+const contactRoutes = require('./contacts');
 // Importing error codes
 // const { NOT_FOUND } = require("../utils/errors");
 
 // Routes
-router.use("/contacts", getContacts);
+router.get("/contacts", contactRoutes);
 
 // Catch-all non-existant routes.
 router.use("*", (req, res) => {
