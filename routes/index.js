@@ -5,7 +5,7 @@ const contactRoutes = require('./contacts');
 // const { NOT_FOUND } = require("../utils/errors");
 
 // Routes
-router.get("/contacts", contactRoutes);
+router.use("/contacts", contactRoutes);
 
 // Catch-all non-existant routes.
 router.use("*", (req, res) => {
