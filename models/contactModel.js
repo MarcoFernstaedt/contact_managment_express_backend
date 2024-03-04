@@ -13,6 +13,12 @@ const contactSchema = mongoose.Schema(
       minlength: 2,
       maxlength: 100,
       unique: true,
+      validate: {
+        validator(value) {
+          return validator.isEmail(value);
+        },
+        message: "Yout must enter a valid Email address",
+      },
       required: [true, "Please add the contact email"],
     },
     phone: {
