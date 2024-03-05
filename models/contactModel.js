@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const contactSchema = mongoose.Schema(
   {
@@ -28,10 +29,11 @@ const contactSchema = mongoose.Schema(
       unique: true,
       required: [true, "Please add the contact phone"],
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  {
-    timestamps: true,
-  }
 );
 
 module.exports = mongoose.model('Contact', contactSchema)
