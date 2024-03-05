@@ -48,7 +48,18 @@ const createContact = (req, res) => {
 // @desc update a contact
 // @route PUT /contacts/:contactId
 const updateContact = (req, res) => {
-  res.status(200).json({ message: `update contact ${req.params.id}` });
+  return Contact.findByIdAndUpdate(req.params.contactId, req.body, {
+    new: true,
+  })
+    .then((contact) => {
+      if (!contact) {
+        res.status(484).json({ message: "Contact Not Found." });
+      }
+      res.status(200).json(contact);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 };
 
 // @desc delete a contact
