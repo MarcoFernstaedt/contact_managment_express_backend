@@ -1,7 +1,7 @@
 const router = require("express").Router();
 // Importing routes
 const contactRoutes = require('./contacts');
-const userRoutes = requrie('./user');
+const userRoutes = require('./user');
 // Importing error codes
 // const { NOT_FOUND } = require("../utils/errors");
 
