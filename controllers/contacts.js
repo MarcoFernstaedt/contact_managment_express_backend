@@ -1,80 +1,84 @@
 const Contact = require("../models/contactModel.js");
 
-// @desc get all contacts
+// @desc Get all contacts
 // @route GET /contacts
-const getContacts = (req, res) => {
-  return Contact.find({})
-    .then((contacts) => {
-      res.status(200).json(contacts);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const getContacts = async (req, res) => {
+  try {
+    const contacts = await Contact.find({ user_id: req.user.id });
+    res.status(200).json({ contacts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
 };
 
-// @desc get specified contact
+// @desc Get specified contact
 // @route GET /contacts/:contactId
-const getContact = (req, res) => {
-  return Contact.findById(req.params.contactId)
-    .then((contact) => {
-      if (!contact) {
-        res.status(484).json({ message: "Contact Not Found." });
-      }
-      res.status(200).json(contact);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+const getContact = async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.contactId);
+    if (!contact) {
+      return res.status(404).json({ message: "Contact Not Found" });
+    }
+    res.status(200).json(contact);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
 };
 
-// @desc create all contacts
+// @desc Create a contact
 // @route POST /contacts
-const createContact = (req, res) => {
+const createContact = async (req, res) => {
   const { name, email, phone } = req.body;
   if (!name || !email || !phone) {
-    res.status(400);
-    throw new Error("All fields are required");
+    return res.status(400).json({ error: "All fields are required" });
   }
-  return Contact.create({ name, email, phone })
-    .then((contact) => {
-      res.status(201).send(contact);
-      ß;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  try {
+    const contact = await Contact.create({ name, email, phone, user_id: req.user.id });
+    res.status(201).json(contact);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
 };
 
-// @desc update a contact
+// @desc Update a contact
 // @route PUT /contacts/:contactId
-const updateContact = (req, res) => {
-  return Contact.findByIdAndUpdate(req.params.contactId, req.body, {
-    new: true,
-  })
-    .then((contact) => {
-      if (!contact) {
-        res.status(484).json({ message: "Contact Not Found." });
-      }
-      res.status(200).json(contact);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+const updateContact = async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.contactId);
+    if (!contact) {
+      return res.status(404).json({ message: "Contact Not Found" });
+    }
+    if (contact.user_id.toString() !== req.user.id) {
+      return res.status(403).json({ error: "You cannot update this contact" });
+    }
+    const updatedContact = await Contact.findByIdAndUpdate(req.params.contactId, req.body, { new: true });
+    res.status(200).json(updatedContact);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
 };
 
-// @desc delete a contact
+// @desc Delete a contact
 // @route DELETE /contacts/:contactId
-const deleteContact = (req, res) => {
-  return Contact.findByIdAndDelete(req.params.contactId)
-    .then((contact) => {
-      if (!contact) {
-        res.status(404).json({ message: "Contact Not Found." });
-      }
-      res.status(200).json({ message: `delete contact ${contact}` });
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+const deleteContact = async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.contactId);
+    if (!contact) {
+      return res.status(404).json({ message: "Contact Not Found" });
+    }
+    if (contact.user_id.toString() !== req.user.id) {
+      return res.status(403).json({ error: "You cannot delete this contact" });
+    }
+    await Contact.findByIdAndDelete(req.params.contactId);
+    res.status(200).json({ message: "Contact deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
 };
 
 module.exports = {
