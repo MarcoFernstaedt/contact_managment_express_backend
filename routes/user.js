@@ -7,10 +7,11 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers/user");
+const validateToken = require("../middleware/validateToken");
 
 router.post("/register", registerUser);
 router.post('/login', loginUser);
-router.get('/current', currentUser)
+router.get('/current', validateToken,currentUser)
 // router.get("/:userId", getUser);
 // router.post("/", createUser);
 // router.put("/:userId", updateUser);
